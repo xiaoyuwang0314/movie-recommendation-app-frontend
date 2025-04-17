@@ -22,8 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-/movie-recommendation/eslint.config.js
-/movie-recommendation/index.html
-/movie-recommendation/package.json
-/movie-recommendation/package-lock.json
-/movie-recommendation/vite.config.js
