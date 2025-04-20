@@ -1,31 +1,34 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const SearchHistoryContext = createContext();
 
 export function SearchHistoryProvider({ children }) {
-  const [searchHistory, setSearchHistory] = useState(() => {
-    const saved = localStorage.getItem("movieHistory");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [searchHistory, setSearchHistory] = useState([]);
+  
+  const addToHistory = (item) => {
+    setSearchHistory(prev => [...prev, item]);
+  };
 
   const clearHistory = () => {
-    localStorage.removeItem("movieHistory");
     setSearchHistory([]);
   };
 
-  const addToHistory = (item) => {
-    const newHistory = [...searchHistory, item];
-    setSearchHistory(newHistory);
-    localStorage.setItem("movieHistory", JSON.stringify(newHistory));
-  };
-
   return (
-    <SearchHistoryContext.Provider value={{ searchHistory, setSearchHistory, addToHistory, clearHistory }}>
+    <SearchHistoryContext.Provider value={{
+      searchHistory,
+      setSearchHistory,
+      addToHistory,
+      clearHistory
+    }}>
       {children}
     </SearchHistoryContext.Provider>
   );
 }
 
 export function useSearchHistory() {
-  return useContext(SearchHistoryContext);
+  const context = useContext(SearchHistoryContext);
+  if (!context) {
+    throw new Error("❌ useSearchHistory must be used within a SearchHistoryProvider");
+  }
+  return context;
 }

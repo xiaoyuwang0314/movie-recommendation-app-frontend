@@ -1,1 +1,13 @@
- 
+:root {
+    /* 🎨 Color palette inspired by macOS system */
+    --color-bg: #f5f5f7;
+    --color-surface: #ffffff;
+    --color-text: #1c1c1e;
+    --color-subtle-text: #666666;
+    --color-primary: #007aff;
+    --color-accent: #ff9500;
+    --color-error: #ff3b30;
+    --color-success: #34c759;
+    --color-border: #e0e0e0;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+}

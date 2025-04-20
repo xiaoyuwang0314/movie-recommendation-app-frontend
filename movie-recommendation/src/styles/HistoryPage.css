@@ -6,53 +6,55 @@
 
 .page-title {
     text-align: center;
-    color: #333;
+    color: var(--color-text);
     margin-bottom: 2rem;
     font-size: 2rem;
+    font-weight: 600;
 }
 
 .login-prompt {
     text-align: center;
     padding: 2rem;
-    background-color: white;
+    background-color: var(--color-surface);
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--color-shadow);
 }
 
 .login-prompt h2 {
-    color: #333;
+    color: var(--color-text);
     margin-bottom: 1rem;
 }
 
 .login-prompt p {
-    color: #666;
+    color: var(--color-subtle-text);
     margin-bottom: 1.5rem;
 }
 
 .login-button {
     display: inline-block;
     padding: 0.8rem 1.5rem;
-    background-color: #4a90e2;
+    background-color: var(--color-primary);
     color: white;
     text-decoration: none;
     border-radius: 8px;
+    font-size: 1rem;
     transition: background-color 0.3s;
 }
 
 .login-button:hover {
-    background-color: #357abd;
+    background-color: #0056b3;
 }
 
 .empty-history {
     text-align: center;
     padding: 2rem;
-    background-color: white;
+    background-color: var(--color-surface);
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--color-shadow);
 }
 
 .empty-history p {
-    color: #666;
+    color: var(--color-subtle-text);
     font-size: 1.1rem;
 }
 

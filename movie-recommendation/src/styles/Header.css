@@ -1,6 +1,6 @@
 .header {
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-surface);
+    box-shadow: 0 2px 4px var(--color-shadow);
     position: fixed;
     top: 0;
     left: 0;
@@ -22,8 +22,8 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 1.5rem;
-    font-weight: bold;
-    color: #0077cc;
+    font-weight: 600;
+    color: var(--color-primary);
 }
 
 .logo span:first-child {
@@ -38,63 +38,64 @@
 
 .main-nav a {
     text-decoration: none;
-    color: #333;
+    color: var(--color-text);
     font-weight: 500;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: background-color 0.2s;
 }
 
 .main-nav a:hover {
-    background-color: #f5f5f5;
+    background-color: rgba(0, 122, 255, 0.08);
+    /* subtle blue highlight */
 }
 
 .username {
-    color: #333;
+    color: var(--color-subtle-text);
     font-weight: 500;
     padding: 0.5rem 1rem;
 }
 
 .logout-button {
-    background-color: #dc3545;
+    background-color: var(--color-error);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
     transition: background-color 0.2s;
 }
 
 .logout-button:hover {
-    background-color: #c82333;
+    background-color: #cc2b1c;
 }
 
 .clear-history-button {
-    background-color: #6c757d;
+    background-color: var(--color-subtle-text);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
     transition: background-color 0.2s;
 }
 
 .clear-history-button:hover:not(:disabled) {
-    background-color: #5a6268;
+    background-color: #4a4a4a;
 }
 
 .clear-history-button.disabled {
-    background-color: #e9ecef;
-    color: #6c757d;
+    background-color: #cccccc;
+    color: white;
     cursor: not-allowed;
 }
 
 .health-check-btn {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;
@@ -102,21 +103,5 @@
 }
 
 .health-check-btn:hover {
-    background-color: #f5f5f5;
-}
-
-.health-status {
-    position: absolute;
-    top: 100%;
-    right: 1rem;
-    background: white;
-    padding: 1rem;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1001;
-}
-
-.health-status pre {
-    margin: 0;
-    font-size: 0.8rem;
+    background-color: rgba(0, 0, 0, 0.05);
 }

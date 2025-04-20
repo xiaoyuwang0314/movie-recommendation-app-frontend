@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import MovieCard from "../components/MovieCard";
+import { useSearchHistory } from "../context/SearchHistoryContext";
 import "../styles/HistoryPage.css";
 
 export default function HistoryPage() {
-    const [history, setHistory] = useState([]);
     const token = localStorage.getItem("token");
+    const { searchHistory } = useSearchHistory(); // ⬅ Get shared history from context
 
+    // Scroll to top on mount
     useEffect(() => {
-        if (token) {
-            const savedHistory = JSON.parse(localStorage.getItem("movieHistory") || "[]");
-            setHistory(savedHistory);
-        }
-    }, [token]);
+        window.scrollTo(0, 0);
+    }, []);
 
+    // If not logged in, redirect to login prompt
     if (!token) {
         return (
             <div className="history-container">
@@ -29,17 +29,18 @@ export default function HistoryPage() {
     return (
         <div className="history-container">
             <h2 className="page-title">🎬 Search History</h2>
-            {history.length === 0 ? (
+
+            {searchHistory.length === 0 ? (
                 <div className="empty-history">
                     <p>No search history yet. Start searching for movies!</p>
                 </div>
             ) : (
                 <div className="history-list">
-                    {history.map((movie, index) => (
+                    {searchHistory.map((movie, index) => (
                         <MovieCard key={index} movie={movie} />
                     ))}
                 </div>
             )}
         </div>
     );
-} 
+}

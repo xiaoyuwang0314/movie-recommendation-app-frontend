@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { movieService } from "../services/api";
 import "../styles/MovieCard.css";
-import '../styles/MovieSearch.css';
+import { getGenreColor, getGenreTextColor } from "../utils/genreColors";
+
 
 export default function MovieCard({ movie }) {
     const [rating, setRating] = useState(null);
@@ -9,82 +10,79 @@ export default function MovieCard({ movie }) {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        if (!movie || !movie.movieId) return;
+
+        console.log("🎥 [MovieCard] mounted for:", movie.title, movie.movieId);
+
+        if (movie.rating !== undefined && movie.rating !== null) {
+            console.log("✅ Using cached rating:", movie.rating);
+            setRating(movie.rating);
+            return;
+        }
+
         setRating(null);
         setRatingError(null);
-        setIsLoading(false);
-    }, [movie]);
+        setIsLoading(true);
 
-    useEffect(() => {
-        let timeoutId;
-        const fetchRating = async () => {
-            setIsLoading(true);
+        const timeoutId = setTimeout(async () => {
             try {
-                timeoutId = setTimeout(async () => {
-                    try {
-                        console.log("Fetching rating for movie:", movie.movieId);
-                        const data = await movieService.getRating(movie.movieId);
-                        console.log("Rating data received:", data);
-                        if (data && data.average_rating !== undefined) {
-                            setRating(data.average_rating);
-                        } else {
-                            setRatingError("No rating available");
-                        }
-                    } catch (err) {
-                        console.error("Rating API error:", err);
-                        if (err.response?.status === 404) {
-                            setRatingError("No ratings found for this movie");
-                        } else {
-                            setRatingError(err.response?.data?.error || "Failed to fetch rating");
-                        }
-                    }
-                }, 500);
+                const data = await movieService.getRating(movie.movieId);
+                if (data && data.average_rating !== undefined) {
+                    setRating(data.average_rating);
+                } else {
+                    setRatingError("No rating available");
+                }
             } catch (err) {
-                console.error("Unexpected error:", err);
-                setRatingError("Failed to fetch rating");
+                console.error("Rating fetch failed:", err);
+                setRatingError("Rating fetch error");
             } finally {
                 setIsLoading(false);
             }
-        };
+        }, 300);
 
-        if (movie && movie.movieId) {
-            fetchRating();
-        }
-
-        return () => {
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-        };
+        return () => clearTimeout(timeoutId);
     }, [movie]);
 
     return (
         <div className="movie-card">
             <div className="movie-header">
-                <h3 className="movie-title">{movie.title}</h3>
+                <h3 className="movie-title">{movie.title || "Untitled Movie"}</h3>
                 <div className="movie-meta">
                     <span className="movie-id">ID: {movie.movieId}</span>
+
                     {isLoading ? (
-                        <div className="rating-loading">Loading rating...</div>
+                        <span className="rating-loading">Loading rating...</span>
                     ) : rating !== null ? (
-                        <div className="movie-rating">
-                            <span className="rating-value">{rating.toFixed(1)}</span>
-                            <span className="rating-star">⭐</span>
-                        </div>
+                        <span className="movie-rating">
+                            <strong>{rating.toFixed(1)}</strong> ⭐
+                        </span>
                     ) : ratingError ? (
-                        <div className="rating-error-small">⚠️ {ratingError}</div>
+                        <span className="rating-error-small">⚠️ {ratingError}</span>
                     ) : null}
                 </div>
             </div>
+
             <div className="movie-genres">
                 <h4>Genres</h4>
                 <div className="genre-tags">
-                    {movie.genres.map((genre, index) => (
-                        <span key={index} className="genre-tag">
-                            {genre}
-                        </span>
-                    ))}
+                    {movie.genres?.map((genre, index) => {
+                        const bg = getGenreColor(genre);
+                        const fg = getGenreTextColor(bg);
+                        return (
+                            <span
+                                key={index}
+                                className="genre-tag"
+                                style={{
+                                    backgroundColor: bg,
+                                    color: fg
+                                }}
+                            >
+                                {genre}
+                            </span>
+                        );
+                    })}
                 </div>
             </div>
         </div>
     );
-} 
+}

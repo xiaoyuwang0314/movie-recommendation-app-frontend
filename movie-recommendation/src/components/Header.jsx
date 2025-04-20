@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { systemService } from "../services/api";
+import { useSearchHistory } from "../context/SearchHistoryContext";
 import "../styles/Header.css";
 
-export default function Header({ searchHistory, clearHistory }) {
+export default function Header() {
     const [isHealthy, setIsHealthy] = useState(null);
     const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState('');
+    const { searchHistory, clearHistory } = useSearchHistory();
 
     useEffect(() => {
-        // 检查登录状态
         const token = localStorage.getItem('token');
         const storedUsername = localStorage.getItem('username');
         if (token && storedUsername) {
@@ -18,11 +19,6 @@ export default function Header({ searchHistory, clearHistory }) {
             setUsername('');
         }
     }, []);
-
-    useEffect(() => {
-        console.log('Header - searchHistory:', searchHistory);
-        console.log('Header - clearHistory function:', typeof clearHistory);
-    }, [searchHistory, clearHistory]);
 
     const checkHealth = async () => {
         setLoading(true);
@@ -34,7 +30,6 @@ export default function Header({ searchHistory, clearHistory }) {
             setIsHealthy(false);
         } finally {
             setLoading(false);
-            // 3秒后重置状态为null
             setTimeout(() => setIsHealthy(null), 3000);
         }
     };
@@ -60,6 +55,17 @@ export default function Header({ searchHistory, clearHistory }) {
                 </div>
                 <nav className="main-nav">
                     <Link to="/">Home</Link>
+                    <Link to="/movies">Search Movies</Link>
+                    <Link to="/history">History</Link>
+                    {username && (
+                        <button
+                            onClick={clearHistory}
+                            className={`clear-history-button ${!searchHistory?.length ? 'disabled' : ''}`}
+                            disabled={!searchHistory?.length}
+                        >
+                            Clear History
+                        </button>
+                    )}
                     {username ? (
                         <>
                             <span className="username">Hello, {username}</span>
@@ -71,21 +77,10 @@ export default function Header({ searchHistory, clearHistory }) {
                             <Link to="/register">Register</Link>
                         </>
                     )}
-                    <Link to="/movies">Search Movies</Link>
-                    <Link to="/history">History</Link>
-                    {username && (
-                        <button 
-                            onClick={clearHistory} 
-                            className={`clear-history-button ${!searchHistory?.length ? 'disabled' : ''}`}
-                            disabled={!searchHistory?.length}
-                        >
-                            Clear History
-                        </button>
-                    )}
                 </nav>
-                <button 
-                    className="health-check-btn" 
-                    onClick={checkHealth} 
+                <button
+                    className="health-check-btn"
+                    onClick={checkHealth}
                     title={isHealthy === null ? "Check API Health" : (isHealthy ? "API is healthy" : "API is unhealthy")}
                     disabled={loading}
                 >
@@ -94,4 +89,4 @@ export default function Header({ searchHistory, clearHistory }) {
             </div>
         </header>
     );
-} 
+}
