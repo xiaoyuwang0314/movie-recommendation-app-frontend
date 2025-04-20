@@ -102,15 +102,15 @@ export default function MovieTimeline({ history }) {
 
     return (
         <div className="timeline-container">
-            <h3>Rating Distribution (High → Low)</h3>
-            <svg ref={svgRef} width={600} height={600}></svg>
+            <h3>Search History Sorted by Rating (High → Low)</h3>
+            <svg ref={svgRef} width={800} height={500}></svg>
 
             {hoveredMovie && tooltipPos && (
                 <div
                     className={`timeline-tooltip ${autoShowMovieId === hoveredMovie.movieId ? "auto-show" : ""}`}
                     style={{
                         top: tooltipPos.y + "px",
-                        left: tooltipPos.x + 300 + "px",
+                        left: tooltipPos.x + 200 + "px",
                     }}
                 >
                     <MovieCard movie={hoveredMovie} />

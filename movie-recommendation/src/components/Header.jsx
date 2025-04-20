@@ -51,7 +51,7 @@ export default function Header() {
             <div className="header-content">
                 <div className="logo">
                     <span role="img" aria-label="Movie Logo">🎬</span>
-                    <span>Movie Rec</span>
+                    <span>Movie</span>
                 </div>
                 <nav className="main-nav">
                     <Link to="/">Home</Link>

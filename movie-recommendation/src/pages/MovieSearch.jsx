@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { movieService } from "../services/api";
-import MovieTimeline from "../components/MovieTimeline";
+import MovieDistribution from "../components/MovieTimeline";
 import MovieCard from "../components/MovieCard";
 import { useSearchHistory } from "../context/SearchHistoryContext";
 import "../styles/MovieSearch.css";
@@ -39,7 +39,6 @@ export default function MovieSearch() {
             if (results.length > 0) {
                 const first = results[0];
 
-                // 主动获取评分
                 let rating = first.rating ?? first.average_rating ?? null;
                 if (rating === null && first.movieId) {
                     try {
@@ -82,7 +81,7 @@ export default function MovieSearch() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for movies..."
+                    placeholder="Search for movies...Please enter a number(movieId)"
                     className="search-input"
                 />
                 <button type="submit" className="search-button" disabled={loading}>
@@ -91,24 +90,17 @@ export default function MovieSearch() {
             </form>
 
             <div className="timeline-section">
-                <div className="timeline-header">
+                {/* <div className="timeline-header">
                     <h3>Search History</h3>
-                </div>
+                </div> */}
                 {searchHistory.length > 0 ? (
-                    <MovieTimeline history={searchHistory} />
+                    <MovieDistribution history={searchHistory} />
                 ) : (
                     <p className="no-history">No search history yet</p>
                 )}
-            </div>
 
-            {/* <div className="movies-grid">
-                {movies.map((movie) => (
-                    <MovieCard
-                        key={movie.movieId || movie.id || movie.title}
-                        movie={movie}
-                    />
-                ))}
-            </div> */}
+
+            </div>
         </div>
     );
 }
