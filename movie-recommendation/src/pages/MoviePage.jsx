@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { movieService } from "../services/api";
-import MovieCard from "./MovieCard";
+import MovieCard from "../components/MovieCard";
 import "../styles/MoviePage.css";
 
 export default function MoviePage() {
