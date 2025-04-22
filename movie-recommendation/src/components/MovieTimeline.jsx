@@ -3,6 +3,8 @@ import * as d3 from "d3";
 import MovieCard from "./MovieCard";
 import "../styles/MovieTimeline.css";
 
+let debounceTimer = null;
+
 export default function MovieTimeline({ history }) {
     const svgRef = useRef();
     const [hoveredMovie, setHoveredMovie] = useState(null);
@@ -57,20 +59,14 @@ export default function MovieTimeline({ history }) {
             .style("fill", d => `rgba(74, 144, 226, ${colorScale(d.rating)})`)
             .style("cursor", "pointer")
             .on("mouseover", (event, d) => {
+                clearTimeout(debounceTimer);
+                setTooltipPos(getSafeTooltipPosition(d._dotPos));
                 setHoveredMovie(d);
-                setTooltipPos(d._dotPos);
-                d3.select(event.currentTarget)
-                    .transition().duration(200)
-                    .attr("r", 8)
-                    .style("stroke", "#333")
-                    .style("stroke-width", 1.5);
             })
-            .on("mouseout", (event, d) => {
-                setHoveredMovie(null);
-                d3.select(event.currentTarget)
-                    .transition().duration(200)
-                    .attr("r", 6)
-                    .style("stroke", "none");
+            .on("mouseout", () => {
+                debounceTimer = setTimeout(() => {
+                    setHoveredMovie(null);
+                }, 300);
             });
 
         dotGroups.append("text")
@@ -81,11 +77,12 @@ export default function MovieTimeline({ history }) {
             .style("font-size", "12px")
             .style("fill", "#555");
 
+        // Auto show latest searched item
         const last = history[history.length - 1];
         const autoItem = sorted.find(item => item.movieId === last.movieId);
         if (autoItem) {
             setHoveredMovie(autoItem);
-            setTooltipPos(autoItem._dotPos);
+            setTooltipPos(getSafeTooltipPosition(autoItem._dotPos));
             setAutoShowMovieId(autoItem.movieId);
 
             const timeout = setTimeout(() => {
@@ -97,6 +94,21 @@ export default function MovieTimeline({ history }) {
         }
 
     }, [history]);
+
+    // 计算 tooltip 不会超出页面范围的坐标
+    function getSafeTooltipPosition(pos) {
+        const tooltipWidth = 330;
+        const tooltipHeight = 420;
+        const padding = 12;
+
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const x = Math.min(pos.x + 200, viewportWidth - tooltipWidth - padding);
+        const y = Math.min(Math.max(pos.y, padding), viewportHeight - tooltipHeight - padding);
+
+        return { x, y };
+    }
 
     if (!history || history.length === 0) return null;
 
@@ -110,7 +122,7 @@ export default function MovieTimeline({ history }) {
                     className={`timeline-tooltip ${autoShowMovieId === hoveredMovie.movieId ? "auto-show" : ""}`}
                     style={{
                         top: tooltipPos.y + "px",
-                        left: tooltipPos.x + 200 + "px",
+                        left: tooltipPos.x + "px",
                     }}
                 >
                     <MovieCard movie={hoveredMovie} />

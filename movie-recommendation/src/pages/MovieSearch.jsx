@@ -10,6 +10,7 @@ export default function MovieSearch() {
     const [searchQuery, setSearchQuery] = useState("");
     const [movies, setMovies] = useState([]);
     const [error, setError] = useState("");
+    const [inputError, setInputError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { searchHistory, addToHistory } = useSearchHistory();
@@ -23,8 +24,13 @@ export default function MovieSearch() {
 
     const handleSearch = async (e) => {
         e.preventDefault();
+
         if (!searchQuery.trim()) {
             setError("Please enter a movie ID");
+            return;
+        }
+        if (!/^\d+$/.test(searchQuery)) {
+            setError("Movie ID must be a number");
             return;
         }
 
@@ -87,7 +93,15 @@ export default function MovieSearch() {
                 <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) {
+                            setSearchQuery(value);
+                            setInputError(""); // Clear real-time error
+                        } else {
+                            setInputError("Only numeric input is allowed.");
+                        }
+                    }}
                     placeholder="Search for movies...Please enter a number (movieId)"
                     className="search-input"
                 />
@@ -96,6 +110,7 @@ export default function MovieSearch() {
                 </button>
             </form>
 
+            {inputError && <div className="input-error-message">⚠️ {inputError}</div>}
             {error && <div className="error-message">⚠️ {error}</div>}
 
             <div className="timeline-section">
