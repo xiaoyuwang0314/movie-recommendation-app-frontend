@@ -1,56 +1,64 @@
-# Movie Recommendation Frontend
+# 🎬 Movie Recommendation Frontend
 
-This is the frontend of the **Movie Recommendation System**, a full-stack web application that allows users to register, log in, browse movie data, and view automatically recommended related movies based on their searches. The project is structured across separate repositories for the frontend, backend, and infrastructure.
+This is the frontend of the **Movie Recommendation System**, a full-stack web application that allows users to register, log in, browse movie data, rate movies, and get intelligent recommendations based on their history. It communicates with a Spring Boot backend deployed on AWS EC2, and the frontend is hosted via Vercel.
 
-🛠️ This frontend is built using **React + Vite**, and communicates with a Spring Boot backend deployed on AWS EC2.
-
-> ⚠️ This project is currently in development. 
+> ⚠️ This project is under active development. Some features are experimental or incomplete.
 
 ---
 
-## 🌐 Live Deployment (Vercel)
+## 🌐 Live Site
 
-Frontend is deployed at:  
-*(I will update it later)*
+- https://frontend.justanotherapp.me  
+
+---
+
+## 🧩 Key Features
+
+- 🔐 **JWT Auth**: Register and login securely
+- 🔎 **Movie Search**: Query movies by numeric `movieId`
+- 🎨 **Rating Visualization**:
+  - Vertical axis sorted by rating (5.0 → top)
+  - Dots with color intensity mapped to score
+  - Hover to reveal floating movie cards
+  - Auto-popup for latest result with debounce + fade
+- 🧠 **Smart History**:
+  - Avoids duplicate entries
+  - Stored in context/localStorage
+  - Clear history with one click
+- 🧪 **Input Validation**:
+  - Accepts only numeric values for movie IDs
+  - Real-time feedback for invalid input
+
+---
+
+## 📊 Visualization Example
+
+Interactive timeline of searched movies, built with **D3.js** + React:
+
+![Rating Chart Demo](./movie-recommendation/assets/visual-demo.png)
 
 ---
 
 ## 📦 Tech Stack
 
-- **Frontend**: React + Vite + Axios
-- **State Management**: useState, useContext, localStorage
-- **Routing**: React Router DOM
-- **Deployment**: Vercel
-- **Auth**: JWT via Authorization Header
-
----
-
-## 📊 Data Visualization Highlight
-
-One of the most notable features of this frontend is the **interactive rating-based visualization** of the user's movie search history:
-
-### 🎯 Search History Rating Chart
-
-- Visualizes previously searched movies as **dots on a vertical rating axis**
-- Movies are sorted by rating (**high scores appear at the top**)
-- Each dot represents a movie; hovering shows a floating movie card
-- Newly added search results will **auto-highlight** for a few seconds
-- **Color intensity** is mapped to score magnitude (higher scores = darker dots)
-- Genre tags are color-coded for improved differentiation and contrast
-
-Built using **D3.js**, fully integrated with React components.
-
-![Rating Visualization](./movie-recommendation/assets/visual-demo.png)
+| Layer         | Tech Stack                                         |
+|---------------|----------------------------------------------------|
+| Frontend      | React (Vite), React Router, Axios                  |
+| State Mgmt    | Context API + localStorage                         |
+| Visualization | D3.js + SVG                                        |
+| Auth          | JWT via `Authorization: Bearer` header             |
+| Deployment    | Vercel (frontend), EC2 (backend) + Cloudflare (DNS)|
 
 ---
 
 ## 🔗 Related Repositories
 
-- **Backend** (Spring Boot + JWT Auth + RESTful APIs + Packer):  
-  👉 [Backend Repo](https://github.com/xiaoyuwang0314/cloud-computing-project/tree/main/cloud-native-web-application)
+- **Backend** (Spring Boot + JWT + REST):  
+  👉 [cloud-native-web-application](https://github.com/xiaoyuwang0314/cloud-computing-project/tree/main/cloud-native-web-application)
 
-- **Infrastructure** (AWS EC2 + Terraform CI/CD):  
-  🛠️ [Infra Repo](https://github.com/xiaoyuwang0314/cloud-computing-infra)
+- **Infrastructure** (Terraform + Packer + EC2):  
+  🛠️ [cloud-computing-infra](https://github.com/xiaoyuwang0314/cloud-computing-infra)  
+  > ⚠️ *Although this repo contains comprehensive AWS provisioning (e.g., NLB, CloudWatch, multi-tier architecture), the current deployment intentionally simplifies some parts (e.g., no load balancer) to reduce cost. Thus, actual deployment may differ slightly from the Terraform code.*
 
 - **Recommendation Engine (Planned)**  
   > 🚧 Not started yet — still in “thinking real hard about it” phase.
