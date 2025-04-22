@@ -1,24 +1,15 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { systemService } from "../services/api";
 import { useSearchHistory } from "../context/SearchHistoryContext";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Header.css";
 
 export default function Header() {
     const [isHealthy, setIsHealthy] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [username, setUsername] = useState('');
     const { searchHistory, clearHistory } = useSearchHistory();
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        const storedUsername = localStorage.getItem('username');
-        if (token && storedUsername) {
-            setUsername(storedUsername);
-        } else {
-            setUsername('');
-        }
-    }, []);
+    const { username, logout } = useAuth();
 
     const checkHealth = async () => {
         setLoading(true);
@@ -32,12 +23,6 @@ export default function Header() {
             setLoading(false);
             setTimeout(() => setIsHealthy(null), 3000);
         }
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        window.location.href = '/login';
     };
 
     const getHealthIcon = () => {
@@ -57,19 +42,15 @@ export default function Header() {
                     <Link to="/">Home</Link>
                     <Link to="/movies">Search Movies</Link>
                     <Link to="/history">History</Link>
-                    {username && (
-                        <button
-                            onClick={clearHistory}
-                            className={`clear-history-button ${!searchHistory?.length ? 'disabled' : ''}`}
-                            disabled={!searchHistory?.length}
-                        >
+                    {username && searchHistory.length > 0 && (
+                        <button onClick={clearHistory} className="clear-history-button">
                             Clear History
                         </button>
                     )}
                     {username ? (
                         <>
                             <span className="username">Hello, {username}</span>
-                            <button onClick={handleLogout} className="logout-button">Logout</button>
+                            <button onClick={logout} className="logout-button">Logout</button>
                         </>
                     ) : (
                         <>
@@ -81,7 +62,13 @@ export default function Header() {
                 <button
                     className="health-check-btn"
                     onClick={checkHealth}
-                    title={isHealthy === null ? "Check API Health" : (isHealthy ? "API is healthy" : "API is unhealthy")}
+                    title={
+                        isHealthy === null
+                            ? "Check API Health"
+                            : isHealthy
+                                ? "API is healthy"
+                                : "API is unhealthy"
+                    }
                     disabled={loading}
                 >
                     {getHealthIcon()}

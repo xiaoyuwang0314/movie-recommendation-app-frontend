@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../services/api";
+import { useAuth } from "../context/AuthContext"; // ✅ 引入
 import "../styles/Form.css";
 
 export default function LoginPage() {
@@ -9,7 +10,8 @@ export default function LoginPage() {
     const [error, setError] = useState("");        // Error message
     const navigate = useNavigate();
 
-    // Handle form submission for login
+    const { login } = useAuth();
+
     const handleLogin = async (e) => {
         e.preventDefault();
         setError("");
@@ -17,14 +19,17 @@ export default function LoginPage() {
         try {
             const data = await authService.login(email, password);
 
-            // Store token and username in localStorage
+            // Store token in localStorage
             localStorage.setItem("token", data.token);
-            localStorage.setItem("username", email.split("@")[0]);
+
+            // Save username 
+            const username = email.split("@")[0];
+            localStorage.setItem("username", username);
+            login(username);  //  context update
 
             // Redirect to movie search page
             navigate("/movies");
         } catch (err) {
-            // Handle and display error
             setError(
                 err.response?.data?.message || "Login failed. Please check your credentials."
             );
