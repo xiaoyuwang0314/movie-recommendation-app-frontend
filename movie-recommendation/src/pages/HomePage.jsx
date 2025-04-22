@@ -9,21 +9,21 @@ export default function HomePage() {
                 <div className="feature-card">
                     <h2>🎬 Discover Movies</h2>
                     <p>
-                        Find your next favorite movie with our intelligent recommendation system.
+                        This page currently has no interactive UI. Once logged in, you can search movies by entering their numeric ID.
                     </p>
                 </div>
 
                 <div className="feature-card">
                     <h2>🔐 Secure Access</h2>
                     <p>
-                        Create an account to save your preferences and get personalized recommendations.
+                        Create an account and log in to access protected features like movie search and search history.
                     </p>
                 </div>
 
                 <div className="feature-card">
                     <h2>🌟 Smart Recommendations</h2>
                     <p>
-                        Get movie suggestions based on your viewing history and preferences.
+                        This feature is still under development. It will offer personalized movie suggestions based on your rating history.
                     </p>
                 </div>
             </div>
