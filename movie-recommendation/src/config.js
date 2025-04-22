@@ -1,5 +1,5 @@
 const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL;
+    import.meta.env.VITE_API_BASE_URL || 'https://api.justanotherapp.me';
 
 export const API_ENDPOINTS = {
     BASE_URL: API_BASE_URL,
