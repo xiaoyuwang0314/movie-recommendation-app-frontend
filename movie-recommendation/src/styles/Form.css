@@ -70,3 +70,11 @@
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+.input-error-message {
+    color: var(--color-warning, #cc6600);
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-align: left;
+}

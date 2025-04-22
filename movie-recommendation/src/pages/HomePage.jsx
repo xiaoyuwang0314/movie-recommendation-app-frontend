@@ -9,7 +9,7 @@ export default function HomePage() {
                 <div className="feature-card">
                     <h2>🎬 Discover Movies</h2>
                     <p>
-                        This page currently has no interactive UI. Once logged in, you can search movies by entering their numeric ID.
+                        Homepage currently has no interactive UI. Once logged in, you can search movies by entering their numeric ID.
                     </p>
                 </div>
 

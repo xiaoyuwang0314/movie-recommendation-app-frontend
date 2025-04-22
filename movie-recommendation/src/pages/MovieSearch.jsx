@@ -29,11 +29,13 @@ export default function MovieSearch() {
             setError("Please enter a movie ID");
             return;
         }
+
         if (!/^\d+$/.test(searchQuery)) {
-            setError("Movie ID must be a number");
+            setInputError("Only numeric input is allowed.");
             return;
         }
 
+        setInputError("");
         setLoading(true);
         setError("");
         setMovies([]);
@@ -95,14 +97,14 @@ export default function MovieSearch() {
                     value={searchQuery}
                     onChange={(e) => {
                         const value = e.target.value;
+                        setSearchQuery(value);
                         if (/^\d*$/.test(value)) {
-                            setSearchQuery(value);
-                            setInputError(""); // Clear real-time error
+                            setInputError(""); // valid
                         } else {
                             setInputError("Only numeric input is allowed.");
                         }
                     }}
-                    placeholder="Search for movies...Please enter a number (movieId)"
+                    placeholder="Search for movies... Please enter a number (movieId)"
                     className="search-input"
                 />
                 <button type="submit" className="search-button" disabled={loading}>
