@@ -6,10 +6,10 @@ import MovieCard from "../components/MovieCard";
 import { useSearchHistory } from "../context/SearchHistoryContext";
 import "../styles/MovieSearch.css";
 
-
 export default function MovieSearch() {
     const [searchQuery, setSearchQuery] = useState("");
     const [movies, setMovies] = useState([]);
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { searchHistory, addToHistory } = useSearchHistory();
@@ -23,9 +23,15 @@ export default function MovieSearch() {
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        if (!searchQuery.trim()) return;
+        if (!searchQuery.trim()) {
+            setError("Please enter a movie ID");
+            return;
+        }
 
         setLoading(true);
+        setError("");
+        setMovies([]);
+
         try {
             const data = await movieService.search(searchQuery);
             const results = Array.isArray(data.movies)
@@ -34,39 +40,40 @@ export default function MovieSearch() {
                     ? [data]
                     : [];
 
+            if (results.length === 0) {
+                setError("No movie found with this ID.");
+                return;
+            }
+
             setMovies(results);
 
-            if (results.length > 0) {
-                const first = results[0];
+            const first = results[0];
+            let rating = first.rating ?? first.average_rating ?? null;
 
-                let rating = first.rating ?? first.average_rating ?? null;
-                if (rating === null && first.movieId) {
-                    try {
-                        const ratingData = await movieService.getRating(first.movieId);
-                        rating = ratingData?.average_rating ?? null;
-                    } catch (err) {
-                        console.warn("⚠️ Failed to fetch rating.");
-                    }
+            if (rating === null && first.movieId) {
+                try {
+                    const ratingData = await movieService.getRating(first.movieId);
+                    rating = ratingData?.average_rating ?? null;
+                } catch (err) {
+                    console.warn("⚠️ Failed to fetch rating.");
                 }
-
-                const newHistoryItem = {
-                    id: Date.now(),
-                    date: new Date().toISOString(),
-                    title: first.title ?? "Untitled Movie",
-                    movieId: first.movieId ?? first.id ?? null,
-                    genres: first.genres ?? [],
-                    rating: rating,
-                    year: first.year ?? null
-                };
-
-                addToHistory(newHistoryItem);
-                console.log("📝 Added to history:", newHistoryItem);
-            } else {
-                console.warn("⚠️ No movies found for:", searchQuery);
             }
+
+            const newHistoryItem = {
+                id: Date.now(),
+                date: new Date().toISOString(),
+                title: first.title ?? "Untitled Movie",
+                movieId: first.movieId ?? first.id ?? null,
+                genres: first.genres ?? [],
+                rating: rating,
+                year: first.year ?? null,
+            };
+
+            addToHistory(newHistoryItem);
+            console.log("📝 Added to history:", newHistoryItem);
         } catch (err) {
             console.error("❌ Search error:", err);
-            setMovies([]);
+            setError(err.response?.data?.error || "Failed to fetch movie.");
         } finally {
             setLoading(false);
         }
@@ -81,7 +88,7 @@ export default function MovieSearch() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for movies...Please enter a number(movieId)"
+                    placeholder="Search for movies...Please enter a number (movieId)"
                     className="search-input"
                 />
                 <button type="submit" className="search-button" disabled={loading}>
@@ -89,17 +96,14 @@ export default function MovieSearch() {
                 </button>
             </form>
 
+            {error && <div className="error-message">⚠️ {error}</div>}
+
             <div className="timeline-section">
-                {/* <div className="timeline-header">
-                    <h3>Search History</h3>
-                </div> */}
                 {searchHistory.length > 0 ? (
                     <MovieDistribution history={searchHistory} />
                 ) : (
                     <p className="no-history">No search history yet</p>
                 )}
-
-
             </div>
         </div>
     );
